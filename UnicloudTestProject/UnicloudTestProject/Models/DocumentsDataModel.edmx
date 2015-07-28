@@ -1,0 +1,208 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DocumentsDataModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="DocumentsDataModelStoreContainer">
+          <EntitySet Name="DocTypeTable" EntityType="DocumentsDataModel.Store.DocTypeTable" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Document" EntityType="DocumentsDataModel.Store.Document" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Person" EntityType="DocumentsDataModel.Store.Person" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_Document_DocTypeTable" Association="DocumentsDataModel.Store.FK_Document_DocTypeTable">
+            <End Role="DocTypeTable" EntitySet="DocTypeTable" />
+            <End Role="Document" EntitySet="Document" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Document_Person" Association="DocumentsDataModel.Store.FK_Document_Person">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="Document" EntitySet="Document" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="DocTypeTable">
+          <Key>
+            <PropertyRef Name="DocType" />
+          </Key>
+          <Property Name="DocType" Type="int" Nullable="false" />
+          <Property Name="TypeName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Document">
+          <Key>
+            <PropertyRef Name="DocumentId" />
+          </Key>
+          <Property Name="DocumentId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DocType" Type="int" />
+          <Property Name="Serial" Type="nvarchar" MaxLength="15" />
+          <Property Name="Number" Type="nvarchar" MaxLength="30" />
+          <Property Name="IssueDate" Type="smalldatetime" />
+          <Property Name="OwningPersonId" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="PersonId" />
+          </Key>
+          <Property Name="PersonId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="MiddleName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="BirthDate" Type="smalldatetime" />
+        </EntityType>
+        <Association Name="FK_Document_DocTypeTable">
+          <End Role="DocTypeTable" Type="DocumentsDataModel.Store.DocTypeTable" Multiplicity="0..1" />
+          <End Role="Document" Type="DocumentsDataModel.Store.Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocTypeTable">
+              <PropertyRef Name="DocType" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="DocType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Document_Person">
+          <End Role="Person" Type="DocumentsDataModel.Store.Person" Multiplicity="0..1" />
+          <End Role="Document" Type="DocumentsDataModel.Store.Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonId" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="OwningPersonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DocumentsDataModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="UniclTestDataEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DocTypeTable" EntityType="DocumentsDataModel.DocTypeTable" />
+          <EntitySet Name="Document" EntityType="DocumentsDataModel.Document" />
+          <EntitySet Name="Person" EntityType="DocumentsDataModel.Person" />
+          <AssociationSet Name="FK_Document_DocTypeTable" Association="DocumentsDataModel.FK_Document_DocTypeTable">
+            <End Role="DocTypeTable" EntitySet="DocTypeTable" />
+            <End Role="Document" EntitySet="Document" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Document_Person" Association="DocumentsDataModel.FK_Document_Person">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="Document" EntitySet="Document" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="DocTypeTable">
+          <Key>
+            <PropertyRef Name="DocType" />
+          </Key>
+          <Property Name="DocType" Type="Int32" Nullable="false" />
+          <Property Name="TypeName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Document" Relationship="DocumentsDataModel.FK_Document_DocTypeTable" FromRole="DocTypeTable" ToRole="Document" />
+        </EntityType>
+        <EntityType Name="Document">
+          <Key>
+            <PropertyRef Name="DocumentId" />
+          </Key>
+          <Property Name="DocumentId" Type="Guid" Nullable="false" />
+          <Property Name="DocType" Type="Int32" />
+          <Property Name="Serial" Type="String" MaxLength="15" Unicode="true" FixedLength="false" />
+          <Property Name="Number" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
+          <Property Name="IssueDate" Type="DateTime" />
+          <Property Name="OwningPersonId" Type="Guid" />
+          <NavigationProperty Name="DocTypeTable" Relationship="DocumentsDataModel.FK_Document_DocTypeTable" FromRole="Document" ToRole="DocTypeTable" />
+          <NavigationProperty Name="Person" Relationship="DocumentsDataModel.FK_Document_Person" FromRole="Document" ToRole="Person" />
+        </EntityType>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="PersonId" />
+          </Key>
+          <Property Name="PersonId" Type="Guid" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="MiddleName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="BirthDate" Type="DateTime" />
+          <NavigationProperty Name="Document" Relationship="DocumentsDataModel.FK_Document_Person" FromRole="Person" ToRole="Document" />
+        </EntityType>
+        <Association Name="FK_Document_DocTypeTable">
+          <End Role="DocTypeTable" Type="DocumentsDataModel.DocTypeTable" Multiplicity="0..1" />
+          <End Role="Document" Type="DocumentsDataModel.Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocTypeTable">
+              <PropertyRef Name="DocType" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="DocType" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Document_Person">
+          <End Role="Person" Type="DocumentsDataModel.Person" Multiplicity="0..1" />
+          <End Role="Document" Type="DocumentsDataModel.Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="PersonId" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="OwningPersonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DocumentsDataModelStoreContainer" CdmEntityContainer="UniclTestDataEntities">
+          <EntitySetMapping Name="DocTypeTable"><EntityTypeMapping TypeName="DocumentsDataModel.DocTypeTable"><MappingFragment StoreEntitySet="DocTypeTable">
+            <ScalarProperty Name="DocType" ColumnName="DocType" />
+            <ScalarProperty Name="TypeName" ColumnName="TypeName" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Document"><EntityTypeMapping TypeName="DocumentsDataModel.Document"><MappingFragment StoreEntitySet="Document">
+            <ScalarProperty Name="DocumentId" ColumnName="DocumentId" />
+            <ScalarProperty Name="DocType" ColumnName="DocType" />
+            <ScalarProperty Name="Serial" ColumnName="Serial" />
+            <ScalarProperty Name="Number" ColumnName="Number" />
+            <ScalarProperty Name="IssueDate" ColumnName="IssueDate" />
+            <ScalarProperty Name="OwningPersonId" ColumnName="OwningPersonId" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+          <EntitySetMapping Name="Person"><EntityTypeMapping TypeName="DocumentsDataModel.Person"><MappingFragment StoreEntitySet="Person">
+            <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+            <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+            <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+            <ScalarProperty Name="LastName" ColumnName="LastName" />
+            <ScalarProperty Name="BirthDate" ColumnName="BirthDate" />
+          </MappingFragment></EntityTypeMapping></EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="DocumentsDataModel">
+        <EntityTypeShape EntityType="DocumentsDataModel.DocTypeTable" Width="1.5" PointX="0.75" PointY="1.375" Height="1.5956835937500002" IsExpanded="true" />
+        <EntityTypeShape EntityType="DocumentsDataModel.Document" Width="1.5" PointX="3" PointY="1" Height="2.5571907552083326" IsExpanded="true" />
+        <EntityTypeShape EntityType="DocumentsDataModel.Person" Width="1.5" PointX="0.75" PointY="5.125" Height="2.1725878906249996" IsExpanded="true" />
+        <AssociationConnector Association="DocumentsDataModel.FK_Document_DocTypeTable" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="2.1728417968750002" />
+          <ConnectorPoint PointX="3" PointY="2.1728417968750002" />
+        </AssociationConnector>
+        <AssociationConnector Association="DocumentsDataModel.FK_Document_Person" ManuallyRouted="false">
+          <ConnectorPoint PointX="2.25" PointY="6.2112939453125" />
+          <ConnectorPoint PointX="3.75" PointY="6.2112939453125" />
+          <ConnectorPoint PointX="3.75" PointY="3.5571907552083326" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>

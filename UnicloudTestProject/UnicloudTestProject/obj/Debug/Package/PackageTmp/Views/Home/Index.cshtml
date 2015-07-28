@@ -1,0 +1,122 @@
+﻿@model PagedList.IPagedList<UnicloudTestProject.Models.Document>
+@using PagedList;
+@using PagedList.Mvc;
+
+@*Для авторизованных пользователей выводим таблицу*@
+@if (Request.IsAuthenticated) 
+{   
+    @*Форма для фильтрации таблицы*@
+    using (Html.BeginForm("Index", ""))
+    {                
+        <p><table border="0">
+                <tr>
+                    <td>
+                        @Html.DropDownList("FieldSearch", (List<SelectListItem>)ViewBag.FieldsList, ViewBag.CurrentFilterField as string)<br/>
+                        <div class="label">Выберите поле для поиска</div>
+                    </td>
+                    <td>
+                        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)<br/>
+                        <div class="label">Что искать?</div>
+                    </td>
+                    <td valign="top">
+                        <input type="submit" value="Найти"/>
+                     </td>
+                </tr>       
+             </table>
+         </p>      
+    }
+    
+    @*Таблица документов*@    
+    <p><table border="1" align="center" class="table">    
+        <tr> 
+            <th>    
+                 №   
+            </th>    
+            <th>    
+                 @Html.ActionLink("ФИО", "Index", new { sortOrder = ViewBag.NameSortParm, filterString = ViewBag.CurrentFilter })     
+            </th>    
+                     <th>    
+                         @Html.ActionLink("Тип документа", "Index", new { sortOrder = ViewBag.DocTypeSortParm, filterString = ViewBag.CurrentFilter })    
+                     </th>    
+                     <th>    
+                         @Html.ActionLink("Серия и номер документа", "Index", new { sortOrder = ViewBag.SerialNumSortParm, filterString = ViewBag.CurrentFilter })    
+                     </th> 
+                     <th>    
+                         @Html.ActionLink("Дата выдачи документа", "Index", new { sortOrder = ViewBag.DateSortParm, filterString = ViewBag.CurrentFilter })    
+                     </th>    
+                 </tr> 
+
+                @{int i = (Model.PageNumber - 1) * 10 + 1;}
+                @foreach (var item in Model)
+                {    
+                    <tr>                
+                        <td>
+                            @i 
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Person.FirstName) @Html.DisplayFor(modelItem => item.Person.LastName) @Html.DisplayFor(modelItem => item.Person.MiddleName)                         
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DocTypeTable.TypeName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Serial) @Html.DisplayFor(modelItem => item.Number)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IssueDate)
+                        </td>            
+                    </tr>
+                    { i++; }
+                }  
+    
+        </table>
+    </p>
+    
+    <div class="pageNum"> 
+        Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) из @Model.PageCount 
+    </div>
+
+    @*Постраничная навигация*@
+    <p align="center"> 
+
+        @if (Model.HasPreviousPage)
+        { 
+            @Html.ActionLink("<<", "Index", new { page = 1, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }) 
+            @Html.Raw(" "); 
+            @Html.ActionLink("Назад", "Index", new { page = Model.PageNumber - 1, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }) 
+        }
+        else
+        {         
+            @:<< 
+            @Html.Raw(" "); 
+            @:Назад         
+        } 
+      
+        @for (int j = 1; j <= Model.PageCount; j++)
+        {
+            @Html.ActionLink(j.ToString(), "Index", new { page = j, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter })
+            @Html.Raw(" ")
+        }
+
+        @if (Model.HasNextPage)
+        { 
+            @Html.ActionLink("Дальше", "Index", new { page = Model.PageNumber + 1, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }) 
+            @Html.Raw(" "); 
+            @Html.ActionLink(">>", "Index", new { page = Model.PageCount, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }) 
+        }
+        else
+        {      
+            @:Дальше    
+            @Html.Raw(" ") 
+            @:>>        
+        } 
+
+    </p>    
+}
+@*Не авторизованных пользователей перенаправляем на страницу входа*@
+else
+{
+    <script type="text/javascript">       
+        window.open('@Url.Action("LogOn", "Account")', "_parent");        
+    </script>    
+}

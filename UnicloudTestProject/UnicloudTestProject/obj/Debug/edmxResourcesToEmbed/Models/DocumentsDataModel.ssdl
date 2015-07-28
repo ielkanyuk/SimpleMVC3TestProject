@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DocumentsDataModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="DocumentsDataModelStoreContainer">
+    <EntitySet Name="DocTypeTable" EntityType="DocumentsDataModel.Store.DocTypeTable" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Document" EntityType="DocumentsDataModel.Store.Document" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Person" EntityType="DocumentsDataModel.Store.Person" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK_Document_DocTypeTable" Association="DocumentsDataModel.Store.FK_Document_DocTypeTable">
+      <End Role="DocTypeTable" EntitySet="DocTypeTable" />
+      <End Role="Document" EntitySet="Document" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Document_Person" Association="DocumentsDataModel.Store.FK_Document_Person">
+      <End Role="Person" EntitySet="Person" />
+      <End Role="Document" EntitySet="Document" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="DocTypeTable">
+    <Key>
+      <PropertyRef Name="DocType" />
+    </Key>
+    <Property Name="DocType" Type="int" Nullable="false" />
+    <Property Name="TypeName" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Document">
+    <Key>
+      <PropertyRef Name="DocumentId" />
+    </Key>
+    <Property Name="DocumentId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DocType" Type="int" />
+    <Property Name="Serial" Type="nvarchar" MaxLength="15" />
+    <Property Name="Number" Type="nvarchar" MaxLength="30" />
+    <Property Name="IssueDate" Type="smalldatetime" />
+    <Property Name="OwningPersonId" Type="uniqueidentifier" />
+  </EntityType>
+  <EntityType Name="Person">
+    <Key>
+      <PropertyRef Name="PersonId" />
+    </Key>
+    <Property Name="PersonId" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+    <Property Name="MiddleName" Type="nvarchar" MaxLength="50" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+    <Property Name="BirthDate" Type="smalldatetime" />
+  </EntityType>
+  <Association Name="FK_Document_DocTypeTable">
+    <End Role="DocTypeTable" Type="DocumentsDataModel.Store.DocTypeTable" Multiplicity="0..1" />
+    <End Role="Document" Type="DocumentsDataModel.Store.Document" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DocTypeTable">
+        <PropertyRef Name="DocType" />
+      </Principal>
+      <Dependent Role="Document">
+        <PropertyRef Name="DocType" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Document_Person">
+    <End Role="Person" Type="DocumentsDataModel.Store.Person" Multiplicity="0..1" />
+    <End Role="Document" Type="DocumentsDataModel.Store.Document" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Person">
+        <PropertyRef Name="PersonId" />
+      </Principal>
+      <Dependent Role="Document">
+        <PropertyRef Name="OwningPersonId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

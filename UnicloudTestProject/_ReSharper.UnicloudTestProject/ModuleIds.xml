@@ -1,0 +1,5 @@
+<Modules>
+  <Module PersistentId="3CFA13CE-7101-48FF-81E2-CBCDE8783C9A" ModuleId="UnicloudTestProject" />
+  <Module PersistentId="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" ModuleId="System.Web.Mvc" />
+  <Module PersistentId="System.Web.Mvc, Version=3.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35" ModuleId="System.Web.Mvc_1" />
+</Modules>
